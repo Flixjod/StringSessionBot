@@ -3,12 +3,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_ID = os.getenv("API_ID", "").strip()
+API_ID = int(os.getenv("API_ID", "").strip())
 API_HASH = os.getenv("API_HASH", "").strip()
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip() # Not a necessary variable anymore but you can add to get stats
-MUST_JOIN = os.getenv("MUST_JOIN", "")
-LOGS_CHAT_ID = os.getenv("LOGS_CHAT_ID", "")
+MUST_JOIN = os.getenv("MUST_JOIN", "").strip()
+LOGS_CHAT_ID = int(os.getenv("LOGS_CHAT_ID", "").strip())
 
 if not API_ID:
     raise SystemExit("No API_ID found. Exiting...")
