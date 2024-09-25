@@ -9,6 +9,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip() # Not a necessary variable anymore but you can add to get stats
 MUST_JOIN = os.getenv("MUST_JOIN", "")
 LOGS_CHAT_ID = os.getenv("LOGS_CHAT_ID", "")
+
 if not API_ID:
     raise SystemExit("No API_ID found. Exiting...")
 elif not API_HASH:
@@ -25,6 +26,3 @@ try:
     API_ID = int(API_ID)
 except ValueError:
     raise SystemExit("API_ID is not a valid integer. Exiting...")
-
-if 'postgres' in DATABASE_URL and 'postgresql' not in DATABASE_URL:
-    DATABASE_URL = DATABASE_URL.replace("postgres", "postgresql")
