@@ -1,6 +1,6 @@
 python-dotenv
 pymongo
-psycopg2
+psycopg2-binary
 Telethon
 pyromod
 TgCrypto
