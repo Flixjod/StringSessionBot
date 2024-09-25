@@ -6,7 +6,7 @@ from env import DATABASE_URL, OWNER_ID
 # Connect to MongoDB if DATABASE_URL is set
 client = MongoClient(DATABASE_URL) if DATABASE_URL else None
 db = client["Sessions_String_Bot"] if client else None  # Replace with your DB name
-users_collection = db["users"] if db else None  # Users collection
+users_collection = db["users"] if db is not None else None  # Users collection
 
 @Client.on_message(~filters.service, group=1)
 async def track_users(_, msg: Message):
