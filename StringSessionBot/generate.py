@@ -44,6 +44,10 @@ async def main(_, msg):
 
 
 async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bool = False):
+    if not API_ID or not API_HASH:
+        await msg.reply("API_ID or API_HASH is not set in the environment. Please configure them properly.")
+        return
+
     if telethon:
         ty = "Telethon"
     else:
@@ -51,39 +55,32 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
     if is_bot:
         ty += " Bot"
     await msg.reply(f"Starting {ty} Session Generation...")
+
     user_id = msg.chat.id
-    api_id_msg = await bot.ask(user_id, 'Please send your `API_ID`', filters=filters.text)
-    if await cancelled(api_id_msg):
-        return
-    try:
-        api_id = int(api_id_msg.text)
-    except ValueError:
-        await api_id_msg.reply('Not a valid API_ID (which must be an integer). Please start generating session again.', quote=True, reply_markup=InlineKeyboardMarkup(Data.generate_button))
-        return
-    api_hash_msg = await bot.ask(user_id, 'Please send your `API_HASH`', filters=filters.text)
-    if await cancelled(api_hash_msg):
-        return
-    api_hash = api_hash_msg.text
+
     if not is_bot:
-        t = "Now please send your `PHONE_NUMBER` along with the country code. \nExample : `+19876543210`'"
+        t = "Now please send your `PHONE_NUMBER` along with the country code. \nExample : `+19876543210`"
     else:
-        t = "Now please send your `BOT_TOKEN` \nExample : `12345:abcdefghijklmnopqrstuvwxyz`'"
+        t = "Now please send your `BOT_TOKEN` \nExample : `12345:abcdefghijklmnopqrstuvwxyz`"
     phone_number_msg = await bot.ask(user_id, t, filters=filters.text)
     if await cancelled(phone_number_msg):
         return
     phone_number = phone_number_msg.text
+
     if not is_bot:
         await msg.reply("Sending OTP...")
     else:
         await msg.reply("Logging as Bot User...")
+
     if telethon and is_bot:
-        client = TelegramClient(StringSession(), api_id, api_hash)
+        client = TelegramClient(StringSession(), APIapi_ID, API_HASH)
     elif telethon:
-        client = TelegramClient(StringSession(), api_id, api_hash)
+        client = TelegramClient(StringSession(), API_ID, API_HASH)
     elif is_bot:
-        client = Client(name=f"bot_{user_id}", api_id=api_id, api_hash=api_hash, bot_token=phone_number, in_memory=True)
+        client = Client(name=f"bot_{user_id}", api_id=API_ID, api_hash=API_HASH, bot_token=phone_number, in_memory=True)
     else:
-        client = Client(name=f"user_{user_id}", api_id=api_id, api_hash=api_hash, in_memory=True)
+        client = Client(name=f"user_{user_id}", api_id=API_ID, api_hash=API_HASH, in_memory=True)
+
     await client.connect()
     try:
         code = None
