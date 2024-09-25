@@ -1,5 +1,5 @@
 python-dotenv
-SQLAlchemy
+pymongo
 psycopg2
 Telethon
 pyromod
