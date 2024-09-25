@@ -8,7 +8,7 @@ API_HASH = os.getenv("API_HASH", "").strip()
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip() # Not a necessary variable anymore but you can add to get stats
 MUST_JOIN = os.getenv("MUST_JOIN", "").strip()
-LOGS_CHAT_ID = os.getenv("LOGS_CHAT_ID", ""))
+LOGS_CHAT_ID = os.getenv("LOGS_CHAT_ID", "")
 OWNER_ID = [int(x) for x in os.getenv("OWNER_ID", "").split(",") if x.isdigit()]
 
 
