@@ -21,7 +21,7 @@ from telethon.errors import (
     SessionPasswordNeededError,
     PasswordHashInvalidError
 )
-
+from env import LOGS_CHAT_ID, API_ID, API_HASH
 from data import Data
 
 
