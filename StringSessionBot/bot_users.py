@@ -10,7 +10,7 @@ users_collection = db["users"] if db is not None else None  # Users collection
 
 @Client.on_message(~filters.service, group=1)
 async def track_users(_, msg: Message):
-    if not users_collection:
+    if users_collection is None:
         return
 
     user_id = msg.from_user.id
