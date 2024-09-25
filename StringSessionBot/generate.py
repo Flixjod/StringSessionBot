@@ -129,7 +129,7 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
                     await client.sign_in(password=password)
                 else:
                     await client.check_password(password=password)
-                if await cancelled(api_id_msg):
+                if await cancelled(two_step_msg.text):
                     return
             except (PasswordHashInvalid, PasswordHashInvalidError):
                 await two_step_msg.reply('Invalid Password Provided. Please start generating session again.', quote=True, reply_markup=InlineKeyboardMarkup(Data.generate_button))
