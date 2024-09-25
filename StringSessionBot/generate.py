@@ -73,7 +73,7 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
         await msg.reply("Logging as Bot User...")
 
     if telethon and is_bot:
-        client = TelegramClient(StringSession(), APIapi_ID, API_HASH)
+        client = TelegramClient(StringSession(), API_ID, API_HASH)
     elif telethon:
         client = TelegramClient(StringSession(), API_ID, API_HASH)
     elif is_bot:
