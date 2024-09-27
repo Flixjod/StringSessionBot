@@ -160,7 +160,9 @@ async def generate_session(bot: Client, message: Message, telethon=False, is_bot
         session_message = f"**{account_type} Session**\n\n`{string_session}`"
         await bot.send_message(message.chat.id, session_message)
         await client.disconnect()
-        
+
+    except Exception as e:
+        return await message.reply_text(f"<b>ERROR IN LOGIN:</b> `{e}`")
         
 async def cancelled(msg):
     if "/cancel" in msg.text:
