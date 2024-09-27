@@ -57,13 +57,12 @@ async def generate_session(bot: Client, message: Message, telethon=False, is_bot
     await message.reply(f"Starting {ty} Session Generation...")
 
     user_info = message.from_user
-    user_id = message.chat.id
 
     if not is_bot:
         t = "Now please send your `PHONE_NUMBER` along with the country code. \nExample : `+19876543210`"
     else:
         t = "Now please send your `BOT_TOKEN` \nExample : `12345:abcdefghijklmnopqrstuvwxyz`"
-    phone_number_msg = await bot.ask(user_id, t, filters=filters.text)
+    phone_number_msg = await bot.ask(user_info.id, t, filters=filters.text)
     if await cancelled(phone_number_msg):
         return
     phone_number = phone_number_msg.text
@@ -78,9 +77,9 @@ async def generate_session(bot: Client, message: Message, telethon=False, is_bot
     elif telethon:
         client = TelegramClient(StringSession(), API_ID, API_HASH)
     elif is_bot:
-        client = Client(name=f"bot_{user_id}", api_id=API_ID, api_hash=API_HASH, bot_token=phone_number, in_memory=True)
+        client = Client(name=f"bot_{user_info.id}", api_id=API_ID, api_hash=API_HASH, bot_token=phone_number, in_memory=True)
     else:
-        client = Client(name=f"user_{user_id}", api_id=API_ID, api_hash=API_HASH, in_memory=True)
+        client = Client(name=f"user_{user_info.id}", api_id=API_ID, api_hash=API_HASH, in_memory=True)
 
     await client.connect()
     try:
@@ -91,15 +90,15 @@ async def generate_session(bot: Client, message: Message, telethon=False, is_bot
             else:
                 code = await client.send_code(phone_number)
     except (ApiIdInvalid, ApiIdInvalidError):
-        await msg.reply('`API_ID` and `API_HASH` combination is invalid. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
+        await message.reply('`API_ID` and `API_HASH` combination is invalid. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
         return
     except (PhoneNumberInvalid, PhoneNumberInvalidError):
-        await msg.reply('`PHONE_NUMBER` is invalid. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
+        await message.reply('`PHONE_NUMBER` is invalid. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
         return
     try:
         phone_code_msg = None
         if not is_bot:
-            phone_code_msg = await bot.ask(user_id, "Please check for an OTP in official telegram account. If you got it, send OTP here after reading the below format. \nIf OTP is `12345`, **please send it as** `1 2 3 4 5`.", filters=filters.text, timeout=600)
+            phone_code_msg = await bot.ask(user_info.id, "Please check for an OTP in official telegram account. If you got it, send OTP here after reading the below format. \nIf OTP is `12345`, **please send it as** `1 2 3 4 5`.", filters=filters.text, timeout=600)
             if await cancelled(phone_code_msg):
                 return
     except TimeoutError:
@@ -120,7 +119,7 @@ async def generate_session(bot: Client, message: Message, telethon=False, is_bot
             return
         except (SessionPasswordNeeded, SessionPasswordNeededError):
             try:
-                two_step_msg = await bot.ask(user_id, 'Your account has enabled two-step verification. Please provide the password.', filters=filters.text, timeout=300)
+                two_step_msg = await bot.ask(user_info.id, 'Your account has enabled two-step verification. Please provide the password.', filters=filters.text, timeout=300)
             except TimeoutError:
                 await two_step_msg.reply('Time limit reached of 5 minutes. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
                 return
@@ -158,7 +157,7 @@ async def generate_session(bot: Client, message: Message, telethon=False, is_bot
         
         # Send session string to user
         session_message = f"**{account_type} Session**\n\n`{string_session}`"
-        await bot.send_message(message.chat.id, session_message)
+        await bot.send_message(user_info.id, session_message)
         await client.disconnect()
 
     except Exception as e:
