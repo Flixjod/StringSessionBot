@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from pyrogram.types import Message
 from pyrogram import Client, filters
-import datetime
+from datetime import datetime
 from env import DATABASE_URL, OWNER_ID
 
 # Connect to MongoDB if DATABASE_URL is set
