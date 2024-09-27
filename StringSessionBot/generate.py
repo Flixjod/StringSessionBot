@@ -22,7 +22,6 @@ from telethon.errors import (
     PasswordHashInvalidError
 )
 from env import LOGS_CHAT_ID, API_ID, API_HASH
-import datetime
 from data import Data
 
 
