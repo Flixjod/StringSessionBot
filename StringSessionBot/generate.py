@@ -160,8 +160,8 @@ async def generate_session(bot: Client, message: Message, telethon=False, is_bot
         session_message = f"**{account_type} Session**\n\n`{string_session}`"
         await bot.send_message(message.chat.id, session_message)
         await client.disconnect()
-
-
+        
+        
 async def cancelled(msg):
     if "/cancel" in msg.text:
         await msg.reply("Cancelled the Process!", quote=True, reply_markup=InlineKeyboardMarkup(Data.generate_button))
