@@ -43,7 +43,7 @@ async def main(_, msg):
     await msg.reply(ask_ques, reply_markup=InlineKeyboardMarkup(buttons_ques))
 
 
-async def generate_session(bot: Client, message: Message, telethon=False, is_bot: bool = False):
+async def generate_session(bot: Client, message: Message, user_info, telethon=False, is_bot: bool = False):
     if not API_ID or not API_HASH:
         await message.reply("API_ID or API_HASH is not set in the environment. Please configure them properly.")
         return
@@ -55,8 +55,6 @@ async def generate_session(bot: Client, message: Message, telethon=False, is_bot
     if is_bot:
         ty += " Bot"
     await message.reply(f"Starting {ty} Session Generation...")
-
-    user_info = message.from_user
 
     if not is_bot:
         t = "Now please send your `PHONE_NUMBER` along with the country code. \nExample : `+19876543210`"
