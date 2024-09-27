@@ -49,7 +49,7 @@ async def _callbacks(bot: Client, callback_query: CallbackQuery):
         try:
             if query == "pyrogram":
                 #await callback_query.answer("Please note that the new type of string sessions may not work in all bots, i.e, only the bots that have been updated to pyrogram v2 will work!", show_alert=True)
-                await generate_session(bot, callback_query.from_user)
+                await generate_session(bot, callback_query.message, callback_query.from_user)
                 """
             # Maybe in future it'll come back.
             elif query == "pyrogram1":
@@ -58,13 +58,13 @@ async def _callbacks(bot: Client, callback_query: CallbackQuery):
                 """
             elif query == "pyrogram_bot":
                 await callback_query.answer("Please note that this bot session will be of pyrogram v2", show_alert=True)
-                await generate_session(bot, callback_query.from_user, is_bot=True)
+                await generate_session(bot, callback_query.message, callback_query.from_user, is_bot=True)
             elif query == "telethon_bot":
                 await callback_query.answer()
-                await generate_session(bot, callback_query.from_user, telethon=True, is_bot=True)
+                await generate_session(bot, callback_query.message, callback_query.from_user, telethon=True, is_bot=True)
             elif query == "telethon":
                 await callback_query.answer()
-                await generate_session(bot, callback_query.from_user, telethon=True)
+                await generate_session(bot, callback_query.message, callback_query.from_user, telethon=True)
         except Exception as e:
             print(traceback.format_exc())
             print(e)
