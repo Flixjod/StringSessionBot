@@ -45,7 +45,7 @@ async def main(_, msg):
 
 async def generate_session(bot: Client, message: Message, telethon=False, is_bot: bool = False):
     if not API_ID or not API_HASH:
-        await msg.reply("API_ID or API_HASH is not set in the environment. Please configure them properly.")
+        await message.reply("API_ID or API_HASH is not set in the environment. Please configure them properly.")
         return
 
     if telethon:
