@@ -6,6 +6,7 @@ load_dotenv()
 API_ID = int(os.getenv("API_ID", "").strip())
 API_HASH = os.getenv("API_HASH", "").strip()
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
+PORT = os.getenv("PORT", "8000").strip()
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip() # Not a necessary variable anymore but you can add to get stats
 MUST_JOIN = os.getenv("MUST_JOIN", "").strip()
 LOGS_CHAT_ID = os.getenv("LOGS_CHAT_ID", "")
