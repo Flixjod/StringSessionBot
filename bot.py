@@ -28,7 +28,12 @@ def health_check():
 
 
 if __name__ == "__main__":
-    flask_app.run(host='0.0.0.0', port=env.PORT)
+    def run_flask():
+        flask_app.run(host='0.0.0.0', port=8000)
+
+    flask_thread = Thread(target=run_flask)
+    flask_thread.start()
+    
     logging.info("Starting the bot")
     try:
         app.start()
